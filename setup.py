@@ -9,7 +9,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 dev_requirements = [
     'geoip2==2.9.0',  # for testing GeoIP2
-    'pytest==4.0.2',
+    'pytest==9.0.3',
     'pytest-cov==2.6.0',
     'pytest-django==3.4.4',
 ]
