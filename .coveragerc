@@ -1,6 +1,0 @@
-[run]
-omit =
-    *venv*
-	*site-packages*
-    qsessions/management/commands/download_geoip_db.py
-    setup.py
