@@ -2,18 +2,13 @@ name: tests
 
 on: [push, pull_request, workflow_dispatch]
 
-permissions:
-  contents: write
-  checks: write
-  pull-requests: write
-
 jobs:
   pre-commit:
     name: Run pre-commits
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
       - uses: pre-commit/action@v3.0.1
 
   test:
@@ -32,9 +27,9 @@ jobs:
           - python-version: "3.9"
             django-version: "4.2"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
@@ -46,16 +41,18 @@ jobs:
         run: |
           set -o pipefail
           py.test --cov --junitxml=pytest.xml --cov-report=term-missing:skip-covered | tee pytest-coverage.txt
-      - if: ${{ strategy.job-index == 0 }}
-        name: Pytest coverage comment
+      # Don't post coverage comments for pull requests from forks, as the action won't have permissions to comment on the PR
+      - if: ${{ strategy.job-index == 0 && (github.event_name != 'pull_request' || !github.event.pull_request.head.repo.fork) }}
+        name: Parse coverage for creating the badge
         id: coverageComment
-        uses: MishaKav/pytest-coverage-comment@main
+        uses: MishaKav/pytest-coverage-comment@v1.7.2
         with:
           pytest-coverage-path: ./pytest-coverage.txt
           junitxml-path: ./pytest.xml
+          hide-comment: true
       - if: ${{ strategy.job-index == 0 && github.ref == 'refs/heads/main' }}
         name: Create the coverage badge
-        uses: schneegans/dynamic-badges-action@v1.7.0
+        uses: schneegans/dynamic-badges-action@v1.8.0
         with:
           auth: ${{ secrets.CODECOVERAGE_GIST }}
           gistID: 24a6d63ff9d29d9be5399169f8199ca0
