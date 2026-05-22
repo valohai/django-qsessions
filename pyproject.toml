@@ -1,3 +1,74 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "django-qsessions"
+dynamic = ["version"]
+description = "Extended session backends for Django"
+readme = "README.md"
+requires-python = ">=3.9"
+license = "MIT"
+authors = [
+    { name = "Mohammad Javad Naderi" },
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Web Environment",
+    "Framework :: Django",
+    "Framework :: Django :: 4.2",
+    "Framework :: Django :: 5.0",
+    "Framework :: Django :: 5.1",
+    "Framework :: Django :: 5.2",
+    "Framework :: Django :: 6.0",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Internet :: WWW/HTTP :: Session",
+    "Topic :: Security",
+]
+dependencies = [
+    "Django >= 4.2",
+    "ua-parser[regex] >= 1.0.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "geoip2>=4.1.0",
+    "pre-commit",
+    "pytest-cov",
+    "pytest-django",
+    "pytest>=7",
+]
+geoip2 = [
+    "geoip2>=4.1.0",
+]
+
+[project.urls]
+Download = "https://pypi.python.org/pypi/django-qsessions"
+Homepage = "https://github.com/QueraTeam/django-qsessions"
+
+[tool.hatch.version]
+path = "qsessions/__init__.py"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/qsessions",
+    "/tests",
+]
+
+[tool.hatch.build.targets.wheel]
+include = [
+    "/qsessions",
+]
+
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "tests.settings"
 norecursedirs = ".git"
@@ -13,3 +84,10 @@ exclude = '/\..+/'
 profile = "black"
 line_length = 120
 skip_gitignore = true
+
+[tool.coverage.run]
+omit = [
+    "*site-packages*",
+    "*venv*",
+    "qsessions/management/commands/download_geoip_db.py",
+]
